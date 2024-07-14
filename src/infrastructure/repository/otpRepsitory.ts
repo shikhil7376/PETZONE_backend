@@ -19,9 +19,19 @@ class OtpRepository implements OtpRepo{
          return otp
      }
 
-   async verifyOtp(email: string, otp: string): Promise<boolean> {
-        const otpData = await OtpModel.findOne({email,otp})
-   }
+    async verifyOtp(email: string, otp: string): Promise<boolean> {
+        const otpData = await OtpModel.findOne({email,otp})as Otp & Document;
+        if(!otpData){
+            return false
+        }
+        const now = new Date()
+        const diff = (now.getTime() - otpData.createdAt.getTime())/1000
+        if(diff>600){
+            await OtpModel.deleteOne({email,otp})
+        }
+        await OtpModel.deleteOne({email,otp})
+        return true
+    }
 }
 
 
