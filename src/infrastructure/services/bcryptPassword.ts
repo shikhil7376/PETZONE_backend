@@ -8,6 +8,10 @@ class EncryptPassword implements Encrypt{
       const hash = await bcrypt.hash(password,salt)
       return hash
     }
+
+   async compare(password: string, hashedPassword: string): Promise<boolean> {
+        return await bcrypt.compare(password,hashedPassword)
+   }
 }
 
 

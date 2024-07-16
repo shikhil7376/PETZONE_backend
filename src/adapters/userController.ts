@@ -11,30 +11,34 @@ class userController{
 
     async signUp(req:Request,res:Response,next:NextFunction){
         try {    
-            const {email} = req.body
+            const {name,email,password,phone} = req.body
           const verifyUser = await this.userUseCase.checkExist(email)
-          if(!verifyUser.data.status){
+          if(verifyUser.data.status==true){
+            const sendOtp = await this.userUseCase.signup(
+                name,
+                email,
+                phone,
+                password
+            )
+            return res.status(sendOtp.status).json(sendOtp.data)
+          }else{
             return res.status(verifyUser.status).json(verifyUser.data)
           }
-         const sendOtp = await this.userUseCase.sendOtp(email)
-            return res.status(sendOtp.status).json(sendOtp.data)
+        
         } catch (error) {
             next(error)
         }
     }
-   
-    async verifyOtp(req:Request,res:Response,next:NextFunction){
-        try {
-           
-            
-            const {email,otp} = req.body;
-            const verifyOtp = await this.userUseCase.verifyOtp(email,otp)
-            return res.status(verifyOtp.status).json(verifyOtp.data)
-        } catch (error) {
-           next(error)
+   async  verifyOtp(req:Request,res:Response,next:NextFunction){
+        const {otp,email} = req.body
+        let verify = await this.userUseCase.verifyOtp(email,otp)
+        if(verify.status == 400){
+            return res.status(verify.status).json({message:verify.message})
+        }else if(verify.status ==200){
+            let save = await this.userUseCase.verifyOtpUser(verify.data)
         }
-    }
-
+   }
+  
 }
 
 export default userController
