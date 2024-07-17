@@ -86,8 +86,6 @@ class UserUseCase{
       }
  
   async verifyOtpUser(user:any){
-
-
     const newUser = {...user}
     const userData = await this.UserRepository.save(newUser)
     let data={
@@ -105,7 +103,73 @@ class UserUseCase{
         token
     }
   }
-   
+ 
+  async login(email:string,password:string){
+    const user = await this.UserRepository.findByEmail(email)
+    let token = ''
+    if(user){
+        let data = {
+            _id:user._id,
+            name:user.name,
+            email:user.email,
+            phone:user.phone,
+            isBlocked:user.isBlocked
+        }
+        if(user.isBlocked){
+            return{
+                status:400,
+                data:{
+                    status:false,
+                    message:'you have been blocked by admin',
+                    token:''
+                }
+            }
+        }
+        const passwordMatch = await this.EncryptPassword.compare(password,user.password)
+        if(passwordMatch && user.isAdmin){
+            token = this.JwtToken.generateToken(user._id,"admin")
+            return {
+                status:200,
+                data:{
+                    status:true,
+                    message:data,
+                    token,
+                    isAdmin:true
+                }
+            }
+        }
+        if(passwordMatch){
+            token = this.JwtToken.generateToken(user._id,'user')
+            return{
+                status:200,
+                data:{
+                    status:true,
+                    message:data,
+                    token
+                }
+            }
+        }else{
+            return{
+                status:400,
+                data:{
+                    status:false,
+                    message:'invalid email or password',
+                    token:''
+                }
+            }
+        }
+    }else{
+        return {
+            status: 400,
+            data: {
+              status: false,
+              message: "Invalid email or password",
+              token: "",
+            },
+          };
+    }
+  }
+  
 
 }
 

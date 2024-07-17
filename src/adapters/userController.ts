@@ -30,13 +30,30 @@ class userController{
         }
     }
    async  verifyOtp(req:Request,res:Response,next:NextFunction){
-        const {otp,email} = req.body
-        let verify = await this.userUseCase.verifyOtp(email,otp)
-        if(verify.status == 400){
-            return res.status(verify.status).json({message:verify.message})
-        }else if(verify.status ==200){
-            let save = await this.userUseCase.verifyOtpUser(verify.data)
+        try {
+            const {otp,email} = req.body
+            let verify = await this.userUseCase.verifyOtp(email,otp)
+            if(verify.status == 400){
+                return res.status(verify.status).json({message:verify.message})
+            }else if(verify.status ==200){
+                let save = await this.userUseCase.verifyOtpUser(verify.data)
+                if(save){
+                    return res.status(save.status).json(save)
+                }
+            }
+        } catch (error) {
+            next(error)
         }
+   }
+
+   async login(req:Request,res:Response,next:NextFunction){
+       try {
+           const {email,password} = req.body
+           const user = await this.userUseCase.login(email,password)
+           return res.status(user.status).json(user.data)
+       } catch (error) {
+         next(error)
+       }
    }
   
 }
