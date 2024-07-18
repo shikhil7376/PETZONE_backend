@@ -11,14 +11,14 @@ class userController{
 
     async signUp(req:Request,res:Response,next:NextFunction){
         try {    
-            const {name,email,password,phone} = req.body
+            const {name,email,password,phone} = req.body 
           const verifyUser = await this.userUseCase.checkExist(email)
           if(verifyUser.data.status==true){
             const sendOtp = await this.userUseCase.signup(
                 name,
                 email,
+                password,
                 phone,
-                password
             )
             return res.status(sendOtp.status).json(sendOtp.data)
           }else{
@@ -49,6 +49,8 @@ class userController{
    async login(req:Request,res:Response,next:NextFunction){
        try {
            const {email,password} = req.body
+           console.log(req.body);
+           
            const user = await this.userUseCase.login(email,password)
            return res.status(user.status).json(user.data)
        } catch (error) {

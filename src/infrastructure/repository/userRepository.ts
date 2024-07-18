@@ -9,12 +9,14 @@ class UserRepository implements UserRepo{
             const userData = await UserModel.findOne({email:email})
             return userData   
       }
-     async saveOtp(email: string, otp: number, name: string, phone: string, password: string): Promise<any> {
+     async saveOtp(name: string,email: string,password: string, phone: string, otp: number): Promise<any> {
+           console.log('phone',phone);
+           
            const otpDoc = new OtpModel({
             name:name,
             email:email,
-            phone:phone,
             password:password,
+            phone:phone,
             otp:otp,
             otpGeneratedAt: new Date()
            })

@@ -17,7 +17,7 @@ const otpSchema:Schema = new Schema<Otp>({
       type:String
     },
     otp:{
-      type:String,
+      type:Number,
       required:true
     },
     otpGeneratedAt:{

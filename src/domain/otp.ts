@@ -3,7 +3,7 @@ interface Otp{
     password:string,
     phone:string,
     email:string,
-    otp:string,
+    otp:number,
     otpGeneratedAt:Date,
 
 }

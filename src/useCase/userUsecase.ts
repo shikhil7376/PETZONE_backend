@@ -48,7 +48,7 @@ class UserUseCase{
       async signup(name:string,email:string,password:string,phone:string){
         const otp = this.generateOtp.createOtp()
         const hashedPassword = await this.EncryptPassword.encryptPassword(password)
-         await this.UserRepository.saveOtp(email,otp,name,phone,hashedPassword)
+         await this.UserRepository.saveOtp(name,email,hashedPassword,phone,otp)
          this.generateEmail.sendOtp(email,otp)
 
          return {
@@ -106,6 +106,8 @@ class UserUseCase{
  
   async login(email:string,password:string){
     const user = await this.UserRepository.findByEmail(email)
+  
+    
     let token = ''
     if(user){
         let data = {
