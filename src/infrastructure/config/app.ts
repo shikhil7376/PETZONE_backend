@@ -6,6 +6,7 @@ import 'dotenv/config'
 // Routes root
 
 import userRoute from '../router/userRoute'
+import kennelRoute from '../router/kennelRoute'
 
 const app = express()
 export const httpServer = http.createServer(app)
@@ -21,3 +22,4 @@ app.use(express.urlencoded({limit:'50mb',extended:true}))
 app.use(cors(corsOption))
 
 app.use("/api/user",userRoute)
+app.use('/api/kennel',kennelRoute)
