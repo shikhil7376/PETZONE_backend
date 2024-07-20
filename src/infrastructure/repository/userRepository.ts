@@ -9,25 +9,45 @@ class UserRepository implements UserRepo{
             const userData = await UserModel.findOne({email:email})
             return userData   
       }
-     async saveOtp(name: string,email: string,password: string, phone: string, otp: number): Promise<any> {
-           console.log('phone',phone);
-           
+     async saveOtp(name: string,email: string,password: string, phone: string, otp: number): Promise<any> {          
            const otpDoc = new OtpModel({
             name:name,
             email:email,
             password:password,
             phone:phone,
             otp:otp,
+            role:'user',
             otpGeneratedAt: new Date()
            })
            const savedDoc = await otpDoc.save()
            return savedDoc
      }
+
+     async saveKennelOtp(name: string, email: string, password: string,phone:string,otp: number): Promise<any> {
+           const otpDoc = new OtpModel({
+            name:name,
+            email:email,
+            password:password,
+            phone:phone,
+            otp:otp,
+            role:'kennelOwner',
+            otpGeneratedAt: new Date()
+           })
+           const savedDoc = await otpDoc.save()
+           return savedDoc
+     }
+
      async findOtpByEmail(email: string): Promise<any> {
-           return OtpModel.findOne({email}).sort({otpGeneratedAt:-1})
+           return OtpModel.findOne({email,role:'user'}).sort({otpGeneratedAt:-1})
+     }
+     async findKennelOtpByEmail(email: string): Promise<any> {
+           return OtpModel.findOne({email,role:'kennelOwner'}).sort({otpGeneratedAt:-1})
      }
      async deleteOtpByEmail(email: string): Promise<any> {
-           return OtpModel.deleteOne({email})
+           return OtpModel.deleteOne({email,role:'user'})
+     }
+     async deleteKennelOtpByEmail(email: string): Promise<any> {
+           return OtpModel.deleteOne({email,role:'kennelOwner'})
      }
      async save(user: User): Promise<User> {
            const newUser = new UserModel(user)

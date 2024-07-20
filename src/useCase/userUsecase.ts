@@ -46,7 +46,7 @@ class UserUseCase{
     }
  
       async signup(name:string,email:string,password:string,phone:string){
-        const otp = this.generateOtp.createOtp()
+        const otp =  this.generateOtp.createOtp()
         const hashedPassword = await this.EncryptPassword.encryptPassword(password)
          await this.UserRepository.saveOtp(name,email,hashedPassword,phone,otp)
          this.generateEmail.sendOtp(email,otp)
@@ -74,10 +74,10 @@ class UserUseCase{
          const now = new Date().getTime()
          const otpGeneratedAt = new Date(otpRecord.otpGeneratedAt).getTime()
          const otpExpiration = 2*60*1000
-         if(now - otpGeneratedAt >otpExpiration){
-            await this.UserRepository.deleteOtpByEmail(email)
-            return {status:400, message:"OTP has expired"}
-         }
+        //  if(now - otpGeneratedAt >otpExpiration){
+        //     await this.UserRepository.deleteOtpByEmail(email)
+        //     return {status:400, message:"OTP has expired"}
+        //  }
          if(otpRecord.otp !==otp){
             return {status:400, message:'Invalid OTP'}
          }

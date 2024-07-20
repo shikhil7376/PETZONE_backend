@@ -13,6 +13,11 @@ const otpSchema:Schema = new Schema<Otp>({
     password:{
       type:String,
     },
+    role:{
+      type:String,
+      enum:['user','kennelOwner'],
+      required:true
+    },
     phone:{
       type:String
     },

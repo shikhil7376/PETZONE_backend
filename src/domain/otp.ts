@@ -3,6 +3,7 @@ interface Otp{
     password:string,
     phone:string,
     email:string,
+    role:string,
     otp:number,
     otpGeneratedAt:Date,
 
