@@ -13,7 +13,13 @@ class userController{
         try {    
             const {name,email,password,phone} = req.body 
           const verifyUser = await this.userUseCase.checkExist(email)
-          if(verifyUser.data.status==true){
+
+          if(verifyUser.data.status ==true && req.body.isGoogle){
+            const user = await this.userUseCase.verifyOtpUser(req.body)
+             return res.status(user.status).json(user)
+           }
+
+          if(verifyUser.data.status==true ){
             const sendOtp = await this.userUseCase.signup(
                 name,
                 email,

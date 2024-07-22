@@ -86,6 +86,26 @@ class UserUseCase{
       }
  
   async verifyOtpUser(user:any){
+     if(user?.isGoogle){
+        const hashedPassword = await this.EncryptPassword.encryptPassword(user.password)
+        const newUser = {...user,password:hashedPassword}
+        const userData = await this.UserRepository.save(newUser)
+        let data = {
+            _id:userData._id,
+            name:userData.name,
+            email:userData.email,
+            phone:userData.phone,
+            isBlocked:userData.isBlocked
+        }
+        const token = this.JwtToken.generateToken(userData._id, "user");
+
+        return {
+          status: 200,
+          data: data,
+          token,
+        };
+     }
+
     const newUser = {...user}
     const userData = await this.UserRepository.save(newUser)
     let data={

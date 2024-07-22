@@ -7,6 +7,7 @@ import 'dotenv/config'
 
 import userRoute from '../router/userRoute'
 import kennelRoute from '../router/kennelRoute'
+import adminRoute from '../router/adminRoutes'
 
 const app = express()
 export const httpServer = http.createServer(app)
@@ -23,3 +24,4 @@ app.use(cors(corsOption))
 
 app.use("/api/user",userRoute)
 app.use('/api/kennel',kennelRoute)
+app.use('/api/admin',adminRoute)
