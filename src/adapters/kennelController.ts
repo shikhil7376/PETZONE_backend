@@ -43,7 +43,18 @@ class kennelController{
             next(error)
         }
    }
-
+  
+   async login(req:Request,res:Response,next:NextFunction){
+    try {
+        const {email,password} = req.body
+        console.log(req.body);
+        
+        const user = await this.kennelusecase.login(email,password)
+        return res.status(user.status).json(user.data)
+    } catch (error) {
+      next(error)
+    }
+}
 }
 
 

@@ -7,7 +7,7 @@ class userController{
     private userUseCase
     constructor(userUseCase:UserUseCase){
         this.userUseCase = userUseCase
-    }
+    } 
 
     async signUp(req:Request,res:Response,next:NextFunction){
         try {    
@@ -52,6 +52,23 @@ class userController{
         }
    }
 
+   async resendOtp(req:Request,res:Response,next:NextFunction){
+       try { 
+        const {name,email,password,phone} = req.body
+        const resendotp = await this.userUseCase.resendOtp(
+            name,
+            email,
+            password,
+            phone
+        )
+          if(resendotp.status==200){
+             res.status(resendotp.status).json(resendotp.data.message)
+          }
+       } catch (error) {
+          next(error)
+       }
+   }
+
    async login(req:Request,res:Response,next:NextFunction){
        try {
            const {email,password} = req.body
@@ -61,6 +78,19 @@ class userController{
            return res.status(user.status).json(user.data)
        } catch (error) {
          next(error)
+       }
+   }
+   
+   async forgotPassword(req:Request,res:Response,next:NextFunction){
+       try {
+        const {email} = req.body
+        console.log(email);
+        
+        const response = await this.userUseCase.forgotPassword(email)
+        
+        return res.status(response.status).json(response.data)
+       } catch (error) {
+        next(error)
        }
    }
   

@@ -96,6 +96,28 @@ async getVerifiedKennelOwner(req:Request,res:Response,next:NextFunction){
     }
 }
 
+async blockkennelOwner(req:Request,res:Response,next:NextFunction) {
+    try {
+        const result = await this.AdminUseCase.blockkennelowner(req.body.userId)
+        if(result.status ==200){
+            return res.status(result.status).json(result.data.message)
+        }
+    } catch (error) {
+        next(error)
+    }
+ }
+
+ async unblockkennelOwner(req:Request,res:Response,next:NextFunction) {
+    try {
+        const result = await this.AdminUseCase.unblockkennelowner(req.body.userId)
+        if(result.status ==200){
+            return res.status(result.status).json(result.data.message)
+        }
+    } catch (error) {
+        next(error)
+    }
+ }
+
 }
 
 

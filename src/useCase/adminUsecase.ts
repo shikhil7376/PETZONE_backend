@@ -155,6 +155,47 @@ class adminUseCase{
             }
          }
     }
+
+    async blockkennelowner(userId:string){
+        const result = await this.AdminRepo.blockKennelOwner(userId)
+        if(result){
+            return {
+                status:200,
+                data:{
+                    status:true,
+                    message:'blocked kennelowner successfully'
+                }
+            }
+        }else{
+            return{
+                status:400,
+                data:{
+                    status:false,
+                    message:'failed to block user! please try later'
+                }
+            }
+        }
+    }
+    async unblockkennelowner(userId:string){
+        const result = await this.AdminRepo.UnblockKennelOwner(userId)
+        if(result){
+            return {
+                status:200,
+                data:{
+                    status:true,
+                    message:'unblocked kennelowner successfully'
+                }
+            }
+        }else{
+            return{
+                status:400,
+                data:{
+                    status:false,
+                    message:'failed to unblock user! please try later'
+                }
+            }
+        }
+    }
 }
 
 export default adminUseCase

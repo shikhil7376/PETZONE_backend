@@ -4,6 +4,7 @@ import EncryptPassword from "../../infrastructure/services/bcryptPassword"
 import UserRepository from "../../infrastructure/repository/userRepository"
 import EmailService from "../../infrastructure/services/emailService"
 import JWTTOKEN from "../../infrastructure/services/generateToken"
+import VerifiedkennelRepository from "../../infrastructure/repository/Kennel/verifiedKennelRepository"
 
 class KennelUseCase{
     private KennelRepository
@@ -12,13 +13,15 @@ class KennelUseCase{
     private UserRepository
     private generateEmail
     private JwtToken
+    private verifiedkennelRepository
     constructor(
         KennalRepository:KennelRepository,
         GenerateOtp:GenerateOtp,
         EncryptPassword:EncryptPassword,
         UserRepository:UserRepository,
         generateEmail:EmailService,
-        JwtToken:JWTTOKEN
+        JwtToken:JWTTOKEN,
+        verfiedKennelRepository:VerifiedkennelRepository
     ){
      this.KennelRepository = KennalRepository
      this.GenerateOtp = GenerateOtp
@@ -26,6 +29,7 @@ class KennelUseCase{
      this.UserRepository = UserRepository
      this.generateEmail = generateEmail
      this.JwtToken = JwtToken
+     this.verifiedkennelRepository =  verfiedKennelRepository
     }
 
     async checkExists(email:string){
@@ -110,6 +114,59 @@ class KennelUseCase{
         message:'OTP verified succesfully',
         token
     }
+   }
+
+   async login(email:string,password:string){
+     const kennelOwner = await this.verifiedkennelRepository.findByEmail(email)
+      if(kennelOwner){
+        let data = {
+            _id:kennelOwner._id,
+            name:kennelOwner.name,
+            email:kennelOwner.email,
+            password:kennelOwner.password,
+            phone:kennelOwner.phone
+        }
+        if(kennelOwner.isBlocked){
+            return{
+                status:400,
+                data:{
+                    status:false,
+                    message:'you have been blocked by admin',
+                    token:''
+                }
+            }
+        }
+        const passworMatch = await this.EncryptPassword.compare(password,kennelOwner.password)
+        if(passworMatch){
+            let token = this.JwtToken.generateToken(kennelOwner._id,'verifiedkennelowner')
+            return {
+                status:200,
+                data:{
+                    status:true,
+                    message:kennelOwner,
+                    token
+                }
+            }
+        }else{
+            return {
+                status:400,
+                data:{
+                    status:false,
+                    message:'invalid email or password',
+                    token:''
+                }
+            }
+        }
+      }else{
+        return{
+            status:400,
+            data:{
+                status:false,
+                message:'invalid email or password',
+                token:''
+            }
+        }
+      }
    }
 }
 

@@ -25,4 +25,6 @@ route.get('/getRequests',(req,res,next)=>adminController.getKennelRequests(req,r
 route.post('/approveRequests',(req,res,next)=>adminController.approveKennel(req,res,next))
 route.post('/rejectRequests',(req,res,next)=>adminController.rejectKennel(req,res,next))
 route.get('/getVerifiedkennelOwner',(req,res,next)=>adminController.getVerifiedKennelOwner(req,res,next))
+route.post('/blockkennelowner',(req,res,next)=>adminController.blockkennelOwner(req,res,next))
+route.post('/unblockkennelowner',(req,res,next)=>adminController.unblockkennelOwner(req,res,next))
 export default route

@@ -11,7 +11,6 @@ interface adminRepo{
     getVerifiedKennelOwner():Promise<{}[]|null>
     blockKennelOwner(reqId:string):Promise<boolean>
     UnblockKennelOwner(reqId:string):Promise<boolean>
-    
 }
 
 

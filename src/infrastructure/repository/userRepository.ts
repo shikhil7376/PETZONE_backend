@@ -44,7 +44,7 @@ class UserRepository implements UserRepo{
            return OtpModel.findOne({email,role:'kennelOwner'}).sort({otpGeneratedAt:-1})
      }
      async deleteOtpByEmail(email: string): Promise<any> {
-           return OtpModel.deleteOne({email,role:'user'})
+           return OtpModel.deleteMany({email,role:'user'})
      }
      async deleteKennelOtpByEmail(email: string): Promise<any> {
            return OtpModel.deleteOne({email,role:'kennelOwner'})

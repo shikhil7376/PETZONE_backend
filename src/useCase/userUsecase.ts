@@ -74,10 +74,10 @@ class UserUseCase{
          const now = new Date().getTime()
          const otpGeneratedAt = new Date(otpRecord.otpGeneratedAt).getTime()
          const otpExpiration = 2*60*1000
-        //  if(now - otpGeneratedAt >otpExpiration){
-        //     await this.UserRepository.deleteOtpByEmail(email)
-        //     return {status:400, message:"OTP has expired"}
-        //  }
+         if(now - otpGeneratedAt >otpExpiration){
+            await this.UserRepository.deleteOtpByEmail(email)
+            return {status:400, message:"OTP has expired"}
+         }
          if(otpRecord.otp !==otp){
             return {status:400, message:'Invalid OTP'}
          }
@@ -124,6 +124,21 @@ class UserUseCase{
     }
   }
  
+async resendOtp (name:string,email:string,password:string,phone:string){
+    const otp = this.generateOtp.createOtp()
+    const hashedPassword = await this.EncryptPassword.encryptPassword(password)
+    await this.UserRepository.saveOtp(name,email,hashedPassword,phone,otp)
+    this.generateEmail.sendOtp(email,otp)
+    return {
+        status:200,
+        data:{
+            status:true,
+            message:'verification otp has been sent to the email'
+        }
+    }
+}
+
+
   async login(email:string,password:string){
     const user = await this.UserRepository.findByEmail(email)
   
@@ -192,6 +207,27 @@ class UserUseCase{
     }
   }
   
+  async forgotPassword (email:string){ 
+    
+     const Response = await this.UserRepository.findByEmail(email)
+      if(Response){
+         return{
+            status:200,
+            data:{
+                status:false,
+                message:'valid email'
+            }
+         }
+      }else{
+          return{
+            status:400,
+            data:{
+                status:false,
+                message:'invalid email'
+            }
+          }
+      }
+  }
 
 }
 
