@@ -1,4 +1,4 @@
-import { Request,Response,NextFunction } from "express";
+import { Request,Response,NextFunction, response } from "express";
 import UserUseCase from "../useCase/userUsecase";
 
 
@@ -93,7 +93,39 @@ class userController{
         next(error)
        }
    }
+
+   async verifyfotp(req:Request,res:Response,next:NextFunction){
+       try {  
+          const {otp,email} = req.body
+          console.log(otp);
+          
+          let verify = await this.userUseCase.verifyOtp(email,otp)
+           if(verify.status==200){
+            return res.status(verify.status).json(verify.data)
+           }
+       } catch (error) {
+          next(error)
+       }
+   }
   
+async verifyforgotResendotp(req:Request,res:Response,next:NextFunction){
+    try {
+        const {email} = req.body
+        const response = await this.userUseCase.forgotResendOtp(email)
+        if(response.status==200){
+            res.status(response.status).json(response.data.message)
+        }
+        
+    } catch (error) {
+        next(error)
+    }
+}
+
+async resetPassword(req:Request,res:Response,next:NextFunction){
+   const {email,password} = req.body
+   const response = await this.userUseCase.resetPassword(email,password)
+}
+
 }
 
 export default userController

@@ -61,6 +61,10 @@ class UserUseCase{
       }
     
       async verifyOtp(email:string,otp:number){
+        console.log("email",email)
+        console.log("otp",otp);
+        
+        
          const otpRecord = await this.UserRepository.findOtpByEmail(email)
          let data:{name:string,email:string,password:string,phone:string,} = {
             name:otpRecord?.name,
@@ -79,6 +83,8 @@ class UserUseCase{
             return {status:400, message:"OTP has expired"}
          }
          if(otpRecord.otp !==otp){
+            console.log('second');
+            
             return {status:400, message:'Invalid OTP'}
          }
          await this.UserRepository.deleteOtpByEmail(email)
@@ -208,8 +214,14 @@ async resendOtp (name:string,email:string,password:string,phone:string){
   }
   
   async forgotPassword (email:string){ 
-    
-     const Response = await this.UserRepository.findByEmail(email)
+     const Response = await this.UserRepository.findByEmail(email)     
+     if(Response){
+        const otp =  this.generateOtp.createOtp()
+        const { name, email: userEmail, password, phone,} = Response;
+        await this.UserRepository.saveOtp(name,email,password,phone,otp)
+        this.generateEmail.sendOtp(email,otp)
+     }
+     
       if(Response){
          return{
             status:200,
@@ -227,6 +239,29 @@ async resendOtp (name:string,email:string,password:string,phone:string){
             }
           }
       }
+  }
+
+  async forgotResendOtp(email:string){
+     const userdata = await this.UserRepository.findByEmail(email)
+     if(userdata){
+        const otp = this.generateOtp.createOtp()
+        const {name,email:userEmail,password,phone} = userdata
+        await this.UserRepository.saveOtp(name,email,password,phone,otp)
+     }
+     return{
+        status:200,
+        data:{
+            status:true,
+            message:'verification otp has been send to your email'
+        }
+     }
+  }
+
+  async resetPassword(email:string,password:string){
+    const userdata = await this.UserRepository.findByEmail(email)
+    if(email){
+        const
+    }
   }
 
 }
