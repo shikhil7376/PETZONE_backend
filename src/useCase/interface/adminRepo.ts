@@ -2,10 +2,10 @@ import approve from "../../domain/approve"
 
 
 interface adminRepo{
-    getUsers():Promise<{users:{}[]}>
+    getUsers(page:number,limit:number,searchTerm:string):Promise<{users:{}[],total:number}>
     blockUser(userId:string):Promise<boolean>
     unBlockUser(userId:string):Promise<boolean>
-    getkennelRequest():Promise<{}[]|null>
+    getkennelRequest(page:number,limit:number,searchTerm:string):Promise<{users:{}[], total:number}>
     approveKennelRequest(reqId:string):Promise<approve | boolean>
     rejectKennelRequest(reqId:string):Promise<{status:boolean;email:string}>
     getVerifiedKennelOwner():Promise<{}[]|null>

@@ -123,7 +123,6 @@ class KennelUseCase{
             _id:kennelOwner._id,
             name:kennelOwner.name,
             email:kennelOwner.email,
-            password:kennelOwner.password,
             phone:kennelOwner.phone
         }
         if(kennelOwner.isBlocked){
@@ -143,7 +142,7 @@ class KennelUseCase{
                 status:200,
                 data:{
                     status:true,
-                    message:kennelOwner,
+                    message:data,
                     token
                 }
             }

@@ -7,9 +7,21 @@ import VerifiedKennelOwner from "../../domain/verifiedKennelOwner";
 
 
 class adminRepository implements adminRepo{
-    async getUsers(): Promise<{ users: {}[] }> {
-        const users = await UserModel.find({isAdmin:false})
-        return {users}
+    async getUsers(page:number,limit:number,searchTerm:string): Promise<{ users: {}[],total:number }> {
+        const skip = (page-1) * limit
+        const query = searchTerm?
+        {
+            isAdmin:false,$or:[
+                {name:{$regex:searchTerm,$options:'i'}},
+                {email:{$regex:searchTerm,$options:'i'}}
+            ]
+        }
+        :{ isAdmin:false}
+
+        const users = await UserModel.find(query).skip(skip).limit(limit).lean()
+        
+        const total = await UserModel.countDocuments(query)
+        return {users,total}
     }
     async blockUser(userId: string): Promise<boolean> {
         let result = await UserModel.updateOne(
@@ -24,10 +36,21 @@ class adminRepository implements adminRepo{
         {$set:{isBlocked:false}})
         return result.modifiedCount>0
     }
-    async getkennelRequest(): Promise<{}[] | null> {
-        let request = await KennelOwnerModel.find()
-        return request
-    }
+     async getkennelRequest(page: number, limit: number, searchTerm: string): Promise<{ users: {}[]; total: number; }> {  
+          const skip = (page-1)*limit
+          const query = searchTerm?
+          {
+            isBlocked:false,$or:[
+                {name:{$regex:searchTerm,$options:'i'}},
+                {email:{$regex:searchTerm,$options:'i'}}
+            ]
+          }:{isBlocked:false}
+          const users = await KennelOwnerModel.find(query).skip(skip).limit(limit).lean()  
+          console.log(users);
+                  
+          const total = await KennelOwnerModel.countDocuments(query)
+          return {users,total}
+     }
 
     async getVerifiedKennelOwner(): Promise<{}[] | null> {
         let result = await VerifiedKennelOwnerModel.find()

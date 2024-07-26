@@ -258,11 +258,26 @@ async resendOtp (name:string,email:string,password:string,phone:string){
   }
 
   async resetPassword(email:string,password:string){
-    const userdata = await this.UserRepository.findByEmail(email)
-    if(email){
-        const
+              console.log(password);
+              
+        const hashedPassword = await this.EncryptPassword.encryptPassword(password)
+         const changedPassword = await this.UserRepository.changePassword(email,hashedPassword)
+         console.log(changedPassword);
+         
+         if(changedPassword){
+            
+            return {
+                status:200,
+                message:'Password changed successfully'
+            }
+         }else{
+            return{
+                status:400,
+                message:'Failed please try again!'
+            }
+         }
     }
-  }
+
 
 }
 

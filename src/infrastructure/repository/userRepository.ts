@@ -55,6 +55,13 @@ class UserRepository implements UserRepo{
             return savedUser
      }
 
+     async changePassword(email: string, password: string): Promise<boolean> {
+           const result = await UserModel.updateOne({
+            email:email
+           },{$set:{password:password}})
+           return result.modifiedCount>0
+     }
+
 }
 
 

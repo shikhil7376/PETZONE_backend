@@ -10,6 +10,7 @@ interface UserRepo{
     deleteOtpByEmail(email:string):Promise<any>
     deleteKennelOtpByEmail(email:string):Promise<any>
     save(user:User):Promise<User>
+    changePassword(email:string,password:string):Promise<boolean>
 }
 
 

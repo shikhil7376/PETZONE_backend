@@ -9,14 +9,17 @@ class adminUseCase{
       this.AdminRepo = AdminRepo
       this.VerifiedKennlRepo = KennelRepo
     }
-    async getUsers(){
-        const data = await this.AdminRepo.getUsers()
+    async getUsers(page:number,limit:number,searchTerm:string){
+        const data = await this.AdminRepo.getUsers(page,limit,searchTerm)
         console.log(data);
         
         if(data){
             return{
                 status:200,
-                data:data.users
+                data:data.users,
+                total:data.total,
+                page,
+                limit
             }
         }else{
             return {
@@ -67,18 +70,20 @@ class adminUseCase{
         }
     }
 
-    async getRequests(){
-        const requests = await this.AdminRepo.getkennelRequest()
-        if(requests){
-            return {
+    async getRequests(page:number,limit:number,searchTerm:string){    
+        const data = await this.AdminRepo.getkennelRequest(page,limit,searchTerm)
+        if(data){
+            return{
                 status:200,
-                data:requests,
-                message:'get request data succesfully'
+                data:data.users,
+                total:data.total,
+                page,
+                limit
             }
         }else{
-            return{
+            return {
                 status:400,
-                message:'failed to fetch the data'
+                message:'failed to fetch data! please try again..'
             }
         }
     }

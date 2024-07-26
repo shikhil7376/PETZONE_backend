@@ -8,7 +8,10 @@ class adminController{
      }
       async getUser(req:Request,res:Response,next:NextFunction){
          try {
-            const users = await this.AdminUseCase.getUsers()
+             const page = parseInt(req.query.page as string)|| 1
+             const limit = parseInt(req.query.limit as string) || 10
+             const searchTerm = req.query.search as string || ''
+            const users = await this.AdminUseCase.getUsers(page,limit,searchTerm)
             if(users.status==200){
                 return res.status(users.status).json(users)
             }else{
@@ -32,7 +35,7 @@ class adminController{
 
      async UnBlockUser(req:Request,res:Response,next:NextFunction){
         try {
-            console.log('herre');
+          
             
             const result = await this.AdminUseCase.unBlockUser(req.body.userId)
             if(result.status ==200){
@@ -46,8 +49,11 @@ class adminController{
      }
 
      async getKennelRequests(req:Request,res:Response,next:NextFunction){
-        try {
-            const requests = await this.AdminUseCase.getRequests()
+        try { 
+            const page = parseInt(req.query.page as string) || 1
+            const limit = parseInt(req.query.limit as string) || 10
+            const searchTerm = req.query.search as string || ''
+            const requests = await this.AdminUseCase.getRequests(page,limit,searchTerm)
             if(requests.status ==200){
                 return res.status(requests.status).json(requests)
             }else{

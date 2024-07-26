@@ -72,7 +72,7 @@ class userController{
    async login(req:Request,res:Response,next:NextFunction){
        try {
            const {email,password} = req.body
-           console.log(req.body);
+          
            
            const user = await this.userUseCase.login(email,password)
            return res.status(user.status).json(user.data)
@@ -84,7 +84,7 @@ class userController{
    async forgotPassword(req:Request,res:Response,next:NextFunction){
        try {
         const {email} = req.body
-        console.log(email);
+       
         
         const response = await this.userUseCase.forgotPassword(email)
         
@@ -97,7 +97,7 @@ class userController{
    async verifyfotp(req:Request,res:Response,next:NextFunction){
        try {  
           const {otp,email} = req.body
-          console.log(otp);
+       
           
           let verify = await this.userUseCase.verifyOtp(email,otp)
            if(verify.status==200){
@@ -122,8 +122,13 @@ async verifyforgotResendotp(req:Request,res:Response,next:NextFunction){
 }
 
 async resetPassword(req:Request,res:Response,next:NextFunction){
-   const {email,password} = req.body
-   const response = await this.userUseCase.resetPassword(email,password)
+    try {
+         const {email,password} = req.body
+         const changepassword = await this.userUseCase.resetPassword(email,password )
+         return res.status(changepassword.status).json(changepassword.message)
+    } catch (error) {
+        next(error)
+    }
 }
 
 }
