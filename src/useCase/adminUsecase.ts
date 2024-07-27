@@ -145,20 +145,22 @@ class adminUseCase{
         }
     }
 
-    async getVerifiedKennelOwner(){
-        const verifiedkenneldata = await this.AdminRepo.getVerifiedKennelOwner()
-         if(verifiedkenneldata){
-          return{
-            status:200,
-            data:verifiedkenneldata,
-            message:'succesfully fetched the verified kennelowner data'
-          }  
-         }else{
+    async getVerifiedKennelOwner(page:number,limit:number,searchTerm:string){
+        const data= await this.AdminRepo.getVerifiedKennelOwner(page,limit,searchTerm)
+        if(data){
             return{
-                status:400,
-                message:'failed to fetch the data !! Try again'
+                status:200,
+                data:data.users,
+                total:data.total,
+                page,
+                limit
             }
-         }
+        }else{
+            return {
+                status:400,
+                message:'failed to fetch data! please try again..'
+            }
+        }
     }
 
     async blockkennelowner(userId:string){

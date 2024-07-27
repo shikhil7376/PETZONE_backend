@@ -38,24 +38,38 @@ class adminRepository implements adminRepo{
     }
      async getkennelRequest(page: number, limit: number, searchTerm: string): Promise<{ users: {}[]; total: number; }> {  
           const skip = (page-1)*limit
-          const query = searchTerm?
-          {
-            isBlocked:false,$or:[
-                {name:{$regex:searchTerm,$options:'i'}},
-                {email:{$regex:searchTerm,$options:'i'}}
-            ]
-          }:{isBlocked:false}
+          let query = {};
+
+          if (searchTerm) {
+            query = {
+              $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { email: { $regex: searchTerm, $options: 'i' } }
+              ]
+            };
+          }
           const users = await KennelOwnerModel.find(query).skip(skip).limit(limit).lean()  
-          console.log(users);
-                  
           const total = await KennelOwnerModel.countDocuments(query)
           return {users,total}
      }
 
-    async getVerifiedKennelOwner(): Promise<{}[] | null> {
-        let result = await VerifiedKennelOwnerModel.find()
-        return result
-    }
+     async getVerifiedKennelOwner(page: number, limit: number, searchTerm: string): Promise<{ users: {}[]; total: number; }> {
+        const skip = (page-1)*limit
+        let query = {};
+
+        if (searchTerm) {
+          query = {
+            $or: [
+              { name: { $regex: searchTerm, $options: 'i' } },
+              { email: { $regex: searchTerm, $options: 'i' } }
+            ]
+          };
+        }
+        const users = await VerifiedKennelOwnerModel.find(query).skip(skip).limit(limit).lean()  
+        const total = await VerifiedKennelOwnerModel.countDocuments(query)
+        return {users,total}
+     } 
+
     async approveKennelRequest(reqId: string): Promise<approve | boolean> {
         let data = await KennelOwnerModel.findOne({_id:reqId})
         if(data){

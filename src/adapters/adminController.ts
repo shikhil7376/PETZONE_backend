@@ -91,14 +91,17 @@ async rejectKennel(req:Request,res:Response,next:NextFunction){
 
 async getVerifiedKennelOwner(req:Request,res:Response,next:NextFunction){
     try {     
-        const users = await this.AdminUseCase.getVerifiedKennelOwner()
-         if(users.status==200){
-            res.status(users.status).json(users)
-         }else{
-            res.status(users.status).json(users.message)
-         }
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+        const searchTerm = req.query.search as string || ''
+        const requests = await this.AdminUseCase.getVerifiedKennelOwner(page,limit,searchTerm)
+        if(requests.status ==200){
+            return res.status(requests.status).json(requests)
+        }else{
+            return res.status(requests.status).json(requests.message)
+        }
     } catch (error) {
-        
+        next(error)
     }
 }
 
