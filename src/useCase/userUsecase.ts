@@ -25,13 +25,23 @@ class UserUseCase{
     }
 
     async  checkExist(email:string){
-        const userExist = await this.UserRepository.findByEmail(email)  
+        const userExist = await this.UserRepository.findByEmail(email) 
+        const data = {
+            _id:userExist?._id,
+            name:userExist?.name,
+            email:userExist?.email,
+            phone:userExist?.phone,
+            isAdmin:userExist?.isAdmin,
+            isBlocked:userExist?.isBlocked
+        }
+         
         if(userExist){
             return{
                 status:400,
                 data:{
                     status:false,
-                    message:"User already exists"
+                    message:"User already exists",
+                    details:data
                 }
             }
         }else{
@@ -278,8 +288,39 @@ async resendOtp (name:string,email:string,password:string,phone:string){
          }
     }
 
+  async checkgoogleExist(email:string){
+     const verifyuser = await this.UserRepository.findByEmail(email)
+    let token = ''
+    if(verifyuser){
+        let data = {
+            _id:verifyuser._id,
+            name:verifyuser.name,
+            email:verifyuser.email,
+            phone:verifyuser.phone,
+            isBlocked:verifyuser.isBlocked
+        }
+        if(verifyuser.isBlocked){
+            return {
+                status:400,
+                data:{
+                    status:false,
+                    message:'you have been blocked by admin',
+                    token:''
+                }
+            }
+        }
+        token = this.JwtToken.generateToken(verifyuser._id,'user')
+        return{
+            status:200,
+            data:{
+                status:true,
+                message:data,
+                token
+            }
+    }
 
+  }
 }
-
+}
 
 export default UserUseCase;

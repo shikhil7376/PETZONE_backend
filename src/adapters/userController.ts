@@ -131,6 +131,22 @@ async resetPassword(req:Request,res:Response,next:NextFunction){
     }
 }
 
+async googleAuth(req:Request,res:Response,next:NextFunction){
+  try {
+    const {email,name} = req.body
+    const verifyUser = await this.userUseCase.checkgoogleExist(email)
+    if(verifyUser){
+        const statusCode = verifyUser?.status || 500; 
+        return res.status(statusCode).json(verifyUser);
+    }
+  } catch (error) {
+    next(error)
+  }
+  
 }
+
+}
+
+
 
 export default userController
