@@ -6,6 +6,7 @@ import EncryptPassword from '../services/bcryptPassword'
 import GenerateOtp from '../services/generateOtp'
 import EmailService from '../services/emailService'
 import JWTTOKEN from '../services/generateToken'
+import { userAuth } from '../middleware/userAuth'
 
 
 //services
@@ -34,4 +35,5 @@ route.post('/forgotpassword',(req,res,next)=>userController.forgotPassword(req,r
 route.post('/verify-fotp',(req,res,next)=>userController.verifyfotp(req,res,next))
 route.post('/verify-fresendotp',(req,res,next)=>userController.verifyforgotResendotp(req,res,next))
 route.post('/resetpassword',(req,res,next)=>userController.resetPassword(req,res,next))
+route.post('/getprofile',userAuth,(req,res,next)=>userController.getProfile(req,res,next))
 export default route

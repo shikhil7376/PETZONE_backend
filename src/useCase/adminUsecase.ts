@@ -121,9 +121,7 @@ class adminUseCase{
         }
     }
     
-    async rejectKennel(reqId:string){
-        console.log('reqid',reqId);
-        
+    async rejectKennel(reqId:string){  
         const reqData = await this.AdminRepo.rejectKennelRequest(reqId)
         if(reqData.status ==true){
             return{

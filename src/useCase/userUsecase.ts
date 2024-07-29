@@ -70,11 +70,7 @@ class UserUseCase{
          }
       }
     
-      async verifyOtp(email:string,otp:number){
-        console.log("email",email)
-        console.log("otp",otp);
-        
-        
+      async verifyOtp(email:string,otp:number){    
          const otpRecord = await this.UserRepository.findOtpByEmail(email)
          let data:{name:string,email:string,password:string,phone:string,} = {
             name:otpRecord?.name,
@@ -267,9 +263,7 @@ async resendOtp (name:string,email:string,password:string,phone:string){
      }
   }
 
-  async resetPassword(email:string,password:string){
-              console.log(password);
-              
+  async resetPassword(email:string,password:string){ 
         const hashedPassword = await this.EncryptPassword.encryptPassword(password)
          const changedPassword = await this.UserRepository.changePassword(email,hashedPassword)
          console.log(changedPassword);
@@ -321,6 +315,31 @@ async resendOtp (name:string,email:string,password:string,phone:string){
 
   }
 }
-}
+
+    async getProfile(id:string){
+    const profileData = await this.UserRepository.getProfile(id)
+    let data = {
+        _id:profileData?._id,
+        name:profileData?.name,
+        email:profileData?.email,
+        phone:profileData?.phone,
+        isBlocked:profileData?.isBlocked
+    }
+    if(profileData){
+        return {
+            status:200,
+            data:{
+                status:true,
+                message:data
+            }
+        }
+    }else{
+        return{
+            status:400,
+            message:'failed to get data'
+        }
+    }
+    }
+    }
 
 export default UserUseCase;

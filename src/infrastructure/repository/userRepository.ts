@@ -62,6 +62,11 @@ class UserRepository implements UserRepo{
            return result.modifiedCount>0
      }
 
+  async getProfile(id: string): Promise<User | null> {
+        const data = await UserModel.findOne({_id:id})
+        return data
+  }
+
 }
 
 

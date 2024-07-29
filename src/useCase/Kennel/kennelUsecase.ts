@@ -167,6 +167,45 @@ class KennelUseCase{
         }
       }
    }
+
+   async resendOtp (name:string,email:string,password:string,phone:string){
+    const otp = this.GenerateOtp.createOtp()
+    const hashedPassword = await this.EncryptPassword.encryptPassword(password)
+    await this.UserRepository.saveKennelOtp(name,email,hashedPassword,phone,otp)
+    this.generateEmail.sendOtp(email,otp)
+    return {
+        status:200,
+        data:{
+            status:true,
+            message:'verification otp has been sent to the email'
+        }
+    }
+}
+
+async getProfile(id:string){
+ const profileData = await this.verifiedkennelRepository.getProfile(id)
+ let data = {
+    _id:profileData?._id,
+    name:profileData?.name,
+    email:profileData?.email,
+    phone:profileData?.phone,
+    isBlocked:profileData?.isBlocked
+}
+if(profileData){
+    return {
+        status:200,
+        data:{
+            status:true,
+            message:data
+        }
+    }
+}else{
+    return{
+        status:400,
+        message:'failed to get data'
+    }
+}
+}
 }
 
 export default KennelUseCase 

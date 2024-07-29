@@ -35,8 +35,6 @@ class adminController{
 
      async UnBlockUser(req:Request,res:Response,next:NextFunction){
         try {
-          
-            
             const result = await this.AdminUseCase.unBlockUser(req.body.userId)
             if(result.status ==200){
                 return res.status(result.status).json(result.data.message)
@@ -77,10 +75,8 @@ class adminController{
     }
   }
 async rejectKennel(req:Request,res:Response,next:NextFunction){
-  try {
-         console.log('id',req.body.reqId);
-         
-      const reject = await this.AdminUseCase.rejectKennel(req.body. userId91)
+  try {     
+      const reject = await this.AdminUseCase.rejectKennel(req.body. userId)
     if(reject.status ==200){
         return res.status(reject.status).json({message:reject.data.message})
     }

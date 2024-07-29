@@ -10,10 +10,16 @@ class VerifiedkennelRepository implements verifiedKennelOwnerRepo{
        return savedKennelOwner
 
    }
+async getProfile(id: string): Promise<VerifiedKennelOwner | null> {
+    const data = await VerifiedKennelOwnerModel.findOne({_id:id})
+    return data
+}
+
    async findByEmail(email: string): Promise<VerifiedKennelOwner | null> {
        const verifiedkennelowner = await VerifiedKennelOwnerModel.findOne({email:email})
        return verifiedkennelowner
    }
+  
 }
 
 export default VerifiedkennelRepository

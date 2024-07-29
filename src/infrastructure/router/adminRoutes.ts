@@ -3,7 +3,7 @@ import AdminController from '../../adapters/adminController'
 import AdminUseCase from '../../useCase/adminUsecase'
 import AdminRepository from '../repository/adminRepository'
 import VerifiedkennelRepository from '../repository/Kennel/verifiedKennelRepository'
-
+import { adminAuth } from '../middleware/adminAuth'
 
 // repository
  const adminRepository = new AdminRepository()

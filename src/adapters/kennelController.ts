@@ -46,13 +46,38 @@ class kennelController{
   
    async login(req:Request,res:Response,next:NextFunction){
     try {
-        const {email,password} = req.body
-        console.log(req.body);
-        
+        const {email,password} = req.body 
         const user = await this.kennelusecase.login(email,password)
         return res.status(user.status).json(user.data)
     } catch (error) {
       next(error)
+    }
+}
+
+async resendOtp(req:Request,res:Response,next:NextFunction){
+    try { 
+     const {name,email,password,phone} = req.body
+     const resendotp = await this.kennelusecase.resendOtp(
+         name,
+         email,
+         password,
+         phone
+     )
+       if(resendotp.status==200){
+          res.status(resendotp.status).json(resendotp.data.message)
+       }
+    } catch (error) {
+       next(error)
+    }
+}
+
+async getProfile(req:Request,res:Response,next:NextFunction){
+    try {
+        const {Id} = req.body 
+        const response = await this.kennelusecase.getProfile(Id) 
+        return res.status(response.status).json(response.data)
+    } catch (error) {
+       next(error) 
     }
 }
 }

@@ -72,8 +72,6 @@ class userController{
    async login(req:Request,res:Response,next:NextFunction){
        try {
            const {email,password} = req.body
-          
-           
            const user = await this.userUseCase.login(email,password)
            return res.status(user.status).json(user.data)
        } catch (error) {
@@ -84,10 +82,7 @@ class userController{
    async forgotPassword(req:Request,res:Response,next:NextFunction){
        try {
         const {email} = req.body
-       
-        
         const response = await this.userUseCase.forgotPassword(email)
-        
         return res.status(response.status).json(response.data)
        } catch (error) {
         next(error)
@@ -97,8 +92,6 @@ class userController{
    async verifyfotp(req:Request,res:Response,next:NextFunction){
        try {  
           const {otp,email} = req.body
-       
-          
           let verify = await this.userUseCase.verifyOtp(email,otp)
            if(verify.status==200){
             return res.status(verify.status).json(verify.data)
@@ -114,8 +107,7 @@ async verifyforgotResendotp(req:Request,res:Response,next:NextFunction){
         const response = await this.userUseCase.forgotResendOtp(email)
         if(response.status==200){
             res.status(response.status).json(response.data.message)
-        }
-        
+        }  
     } catch (error) {
         next(error)
     }
@@ -143,6 +135,16 @@ async googleAuth(req:Request,res:Response,next:NextFunction){
     next(error)
   }
   
+}
+
+async getProfile(req:Request,res:Response,next:NextFunction){
+    try {     
+         const {Id} = req.body 
+        const response = await this.userUseCase.getProfile(Id)
+        return res.status(response.status).json(response.data)
+    } catch (error) {
+        next(error)
+    }
 }
 
 }

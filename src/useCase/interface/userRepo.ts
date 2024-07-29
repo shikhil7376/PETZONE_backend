@@ -11,6 +11,7 @@ interface UserRepo{
     deleteKennelOtpByEmail(email:string):Promise<any>
     save(user:User):Promise<User>
     changePassword(email:string,password:string):Promise<boolean>
+    getProfile(id:string):Promise<User|null>
 }
 
 
