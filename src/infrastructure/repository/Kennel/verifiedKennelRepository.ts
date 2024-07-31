@@ -1,6 +1,8 @@
 import VerifiedKennelOwner from "../../../domain/verifiedKennelOwner";
 import VerifiedKennelOwnerModel from "../../database/VerifiedKennelownerModel";
 import verifiedKennelOwnerRepo from "../../../useCase/interface/Kennel/VerifiedKennelRepo";
+import kennelModel from "../../database/cagesModel";
+import kennel from "../../../domain/cages";
 
 
 class VerifiedkennelRepository implements verifiedKennelOwnerRepo{
@@ -20,6 +22,11 @@ async getProfile(id: string): Promise<VerifiedKennelOwner | null> {
        return verifiedkennelowner
    }
   
+   async savekennel(user: kennel): Promise<kennel> {
+       const newKennel = new kennelModel(user)
+       const savedKennel = await newKennel.save()
+       return savedKennel
+   }
 }
 
 export default VerifiedkennelRepository

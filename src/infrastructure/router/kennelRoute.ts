@@ -9,11 +9,16 @@ import EmailService from '../services/emailService'
 import JWTTOKEN from '../services/generateToken'
 import VerifiedkennelRepository from '../repository/Kennel/verifiedKennelRepository'
 import { kennelAuth } from '../middleware/kennelAuth'
+import Cloudinary from '../services/cloudinary'
+import upload from '../services/multer'
+
+
 // services
 const generateOtp = new GenerateOtp()
 const encryptPassword = new EncryptPassword()
 const generateEmail = new EmailService()
 const jwtToken = new JWTTOKEN()
+const cloudinary = new Cloudinary()
 
 // repositories
 const kennelRepository = new KennelRepository()
@@ -21,7 +26,7 @@ const userRepository = new UserRepository()
 const verifiedkennelRepository = new VerifiedkennelRepository()
 
 //usecases
-const kennelUsecase = new KennelUseCase(kennelRepository,generateOtp,encryptPassword,userRepository,generateEmail,jwtToken,verifiedkennelRepository)
+const kennelUsecase = new KennelUseCase(kennelRepository,generateOtp,encryptPassword,userRepository,generateEmail,jwtToken,verifiedkennelRepository,cloudinary)
 
 // controllers
 const kennelcontroller = new kennelController(kennelUsecase)
@@ -33,5 +38,6 @@ route.post('/verify',(req,res,next)=>kennelcontroller.verifyOtp(req,res,next))
 route.post('/login',(req,res,next)=>kennelcontroller.login(req,res,next))
 route.post('/resendotp',(req,res,next)=>kennelcontroller.resendOtp(req,res,next))
 route.post('/getprofile',kennelAuth,(req,res,next)=>kennelcontroller.getProfile(req,res,next))
+route.post('/add-cages',upload.array('images',3), (req, res, next) => kennelcontroller.addKennel(req, res, next));
 
 export default route 

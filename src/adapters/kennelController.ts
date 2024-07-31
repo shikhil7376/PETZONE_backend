@@ -80,6 +80,20 @@ async getProfile(req:Request,res:Response,next:NextFunction){
        next(error) 
     }
 }
+
+async addKennel(req:Request,res:Response,next:NextFunction){
+    try {    
+   
+     console.log(req.body);
+     const images = req.files as Express.Multer.File[];
+     console.log(images);
+     
+     
+     
+    } catch (error) {
+        next(error)
+    }
+}
 }
 
 

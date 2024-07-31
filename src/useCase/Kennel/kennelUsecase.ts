@@ -5,6 +5,7 @@ import UserRepository from "../../infrastructure/repository/userRepository"
 import EmailService from "../../infrastructure/services/emailService"
 import JWTTOKEN from "../../infrastructure/services/generateToken"
 import VerifiedkennelRepository from "../../infrastructure/repository/Kennel/verifiedKennelRepository"
+import Cloudinary from "../../infrastructure/services/cloudinary"
 
 class KennelUseCase{
     private KennelRepository
@@ -14,6 +15,7 @@ class KennelUseCase{
     private generateEmail
     private JwtToken
     private verifiedkennelRepository
+    private Cloudinary
     constructor(
         KennalRepository:KennelRepository,
         GenerateOtp:GenerateOtp,
@@ -21,7 +23,8 @@ class KennelUseCase{
         UserRepository:UserRepository,
         generateEmail:EmailService,
         JwtToken:JWTTOKEN,
-        verfiedKennelRepository:VerifiedkennelRepository
+        verfiedKennelRepository:VerifiedkennelRepository,
+        cloudinary:Cloudinary
     ){
      this.KennelRepository = KennalRepository
      this.GenerateOtp = GenerateOtp
@@ -30,6 +33,7 @@ class KennelUseCase{
      this.generateEmail = generateEmail
      this.JwtToken = JwtToken
      this.verifiedkennelRepository =  verfiedKennelRepository
+     this.Cloudinary = cloudinary
     }
 
     async checkExists(email:string){
@@ -206,6 +210,21 @@ if(profileData){
     }
 }
 }
+
+async addKennel(data:any){
+    const imageUrls = await this.Cloudinary.uploadMultipleimages(data.images,'kennels')
+    const newKennel = {
+        ...data,
+        images:imageUrls
+    }
+    const savedKennel = await this.verifiedkennelRepository.savekennel(newKennel)
+
+    return {
+        status:200,
+        data:savedKennel
+    }
+}
+
 }
 
 export default KennelUseCase 
