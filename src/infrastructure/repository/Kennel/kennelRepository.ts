@@ -13,6 +13,7 @@ class KennelRepository implements KennelRepo{
        return savedUser
 
    }
+  
 }
 
 export default KennelRepository

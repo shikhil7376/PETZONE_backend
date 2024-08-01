@@ -7,8 +7,9 @@ dotenv.config()
 cloudinary.config({
     cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
     api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_KEY
+    api_secret:process.env.CLOUDINARY_API_SECRET
 })
+
 
 class Cloudinary implements cloudinaryI{
   async uploadImage(image: any, folderName: string): Promise<string> {
@@ -29,7 +30,10 @@ class Cloudinary implements cloudinaryI{
 
   async uploadMultipleimages(images: any[], folderName: string): Promise<string[]> {
       try {
+    
           const uploadPromises = images.map(async(image)=>{
+            console.log(image);
+            
             const uploadResult = await cloudinary.uploader.upload(image,{
                 folder:folderName,
                 resource_type:'image'

@@ -38,6 +38,7 @@ route.post('/verify',(req,res,next)=>kennelcontroller.verifyOtp(req,res,next))
 route.post('/login',(req,res,next)=>kennelcontroller.login(req,res,next))
 route.post('/resendotp',(req,res,next)=>kennelcontroller.resendOtp(req,res,next))
 route.post('/getprofile',kennelAuth,(req,res,next)=>kennelcontroller.getProfile(req,res,next))
-route.post('/add-cages',upload.array('images',3), (req, res, next) => kennelcontroller.addKennel(req, res, next));
+route.post('/add-cages',upload.array('cageimages',3), (req, res, next) => kennelcontroller.addKennel(req, res, next));
+route.get('/get-cages',(req,res,next)=>kennelcontroller.getCages(req,res,next))
 
 export default route 

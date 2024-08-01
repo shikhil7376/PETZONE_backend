@@ -211,19 +211,31 @@ if(profileData){
 }
 }
 
-async addKennel(data:any){
-    const imageUrls = await this.Cloudinary.uploadMultipleimages(data.images,'kennels')
-    const newKennel = {
-        ...data,
-        images:imageUrls
-    }
-    const savedKennel = await this.verifiedkennelRepository.savekennel(newKennel)
-
-    return {
-        status:200,
-        data:savedKennel
-    }
+async addCage(data:any,filepath:string[]){
+    const imageUrls = await this.Cloudinary.uploadMultipleimages(filepath,'cages')
+     data.image = imageUrls
+     const savedKennel = await this.verifiedkennelRepository.savecage(data)
 }
+
+ async getCages(){
+    const cagedata = await this.verifiedkennelRepository.getCages()
+    console.log(cagedata);
+    
+     if(cagedata){
+        return{
+            status:200,
+            data:{
+                status:true,
+                data:cagedata
+            }
+        }
+     }else{
+        return{
+            status:400,
+            message:'failed to fetch data'
+        }
+     }
+ }
 
 }
 

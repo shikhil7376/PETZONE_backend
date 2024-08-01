@@ -83,17 +83,39 @@ async getProfile(req:Request,res:Response,next:NextFunction){
 
 async addKennel(req:Request,res:Response,next:NextFunction){
     try {    
-   
-     console.log(req.body);
-     const images = req.files as Express.Multer.File[];
-     console.log(images);
-     
-     
+        console.log(req.body);
+        
+       const {kennelname,location,description,phone,type,maxCount,PricePerNight,ownerId} = req.body
+       const data ={
+        kennelname:kennelname,
+        location:location,
+        description:description,
+        phone:phone,
+        type:type,
+        maxcount:maxCount,
+        pricepernight:PricePerNight,
+        ownerId:ownerId
+       }
+        const images =  req.files as Express.Multer.File[];
+     const imagepath = images.map((val)=>val.path)  
+     const response = await this.kennelusecase.addCage(data,imagepath)
      
     } catch (error) {
         next(error)
     }
 }
+
+async getCages(req:Request,res:Response,next:NextFunction){
+    try {
+        const data = await this.kennelusecase.getCages()  
+        console.log(data.data);
+              
+       return  res.status(data.status).send(data.data)
+    } catch (error) {
+        next(error)
+    }
+}
+
 }
 
 

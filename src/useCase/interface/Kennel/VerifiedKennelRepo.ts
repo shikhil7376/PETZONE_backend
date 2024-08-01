@@ -1,11 +1,12 @@
 import VerifiedKennelOwner from "../../../domain/verifiedKennelOwner";
-import kennel from "../../../domain/cages";
+import cages from "../../../domain/cages";
 
 interface verifiedKennelOwnerRepo{
    save(kennelOwner:any):Promise<VerifiedKennelOwner>
    findByEmail(email:string):Promise<VerifiedKennelOwner|null>
    getProfile(id:string):Promise<VerifiedKennelOwner|null>
-   savekennel(user:kennel):Promise<kennel>
+   savecage(data:cages):Promise<cages|null>
+   getCages(): Promise<cages[] | null>;
 
 }
 

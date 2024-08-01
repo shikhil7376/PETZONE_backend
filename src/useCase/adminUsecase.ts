@@ -10,9 +10,7 @@ class adminUseCase{
       this.VerifiedKennlRepo = KennelRepo
     }
     async getUsers(page:number,limit:number,searchTerm:string){
-        const data = await this.AdminRepo.getUsers(page,limit,searchTerm)
-        console.log(data);
-        
+        const data = await this.AdminRepo.getUsers(page,limit,searchTerm)        
         if(data){
             return{
                 status:200,
