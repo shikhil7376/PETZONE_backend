@@ -26,10 +26,13 @@ const cageSchema:Schema<cages&Document> = new Schema({
         type:[String],
         required:true
     },
-    currentBookings:{
-        type:[String],
-        required:true
-    },
+    currentBookings:[{
+        bookingid:{type:String,required:true},
+        fromdate:{type:String,required:true},
+        todate:{type:String,required:true},
+        userid:{type:String,required:true},
+        status:{type:String,required:true},
+    }] ,
     description:{
         type:String,
         required:true
@@ -40,7 +43,7 @@ const cageSchema:Schema<cages&Document> = new Schema({
         enum:['small','medium','large']
     },
     ownerId:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref: 'VerifiedKennelOwner',
         required: true,
     }

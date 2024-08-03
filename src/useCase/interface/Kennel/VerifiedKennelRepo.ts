@@ -1,5 +1,6 @@
 import VerifiedKennelOwner from "../../../domain/verifiedKennelOwner";
 import cages from "../../../domain/cages";
+import booking from "../../../domain/Booking";
 
 interface verifiedKennelOwnerRepo{
    save(kennelOwner:any):Promise<VerifiedKennelOwner>
@@ -7,7 +8,8 @@ interface verifiedKennelOwnerRepo{
    getProfile(id:string):Promise<VerifiedKennelOwner|null>
    savecage(data:cages):Promise<cages|null>
    getCages(): Promise<cages[] | null>;
-
+   getSingleCage(id:string):Promise<cages|null>
+   savebooking(details:cages,userid:string,fromdate:string,todate:string,totalAmount:Number,totaldays:Number,transactionId:string):Promise<booking|null>
 }
 
 export default verifiedKennelOwnerRepo

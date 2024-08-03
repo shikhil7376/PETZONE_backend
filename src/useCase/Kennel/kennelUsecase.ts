@@ -219,8 +219,6 @@ async addCage(data:any,filepath:string[]){
 
  async getCages(){
     const cagedata = await this.verifiedkennelRepository.getCages()
-    console.log(cagedata);
-    
      if(cagedata){
         return{
             status:200,
@@ -235,6 +233,44 @@ async addCage(data:any,filepath:string[]){
             message:'failed to fetch data'
         }
      }
+ }
+
+ async getSingleCage(id:string){
+    const viewdetails = await this.verifiedkennelRepository.getSingleCage(id)
+    let data ={
+        _id:viewdetails?._id,
+        kennelname:viewdetails?.kennelname,
+        location:viewdetails?.location,
+        maxcount:viewdetails?.maxcount,
+        phone:viewdetails?.phone,
+        pricepernight:viewdetails?.pricepernight,
+        Image:viewdetails?.image,
+        type:viewdetails?.type,
+        description:viewdetails?.description,
+        ownerId:viewdetails?.ownerId
+    }
+    if(viewdetails){
+        return {
+            status:200,
+            data:{
+                status:true,
+                message:data
+            }
+        }
+    }else{
+        return{
+            status:400,
+            message:'failed to get data'
+        }
+    }
+ }
+
+ async booking(details:any,userid:string,fromdate:string,todate:string,totalAmount:Number,totalDays:Number){
+    const bookinginfo = await this.verifiedkennelRepository.savebooking(details,userid,fromdate,todate,totalAmount,totalDays)
+    return {
+        status:200,
+        message:'cage booked successfully'
+    }
  }
 
 }

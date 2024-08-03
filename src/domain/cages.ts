@@ -9,10 +9,16 @@ interface cages{
     phone:string,
     pricepernight:number,
     image:string[],
-    currentBookings:string[],
+    currentBookings:{
+        bookingid:string,
+        fromdate:string,
+        todate:string,
+        userid:string,
+        status:string
+    }[],
     description:string,
     type:'small'|'medium'|'large'
-    ownerId: mongoose.Schema.Types.ObjectId;
+    ownerId: string;
 }
 
 export default cages

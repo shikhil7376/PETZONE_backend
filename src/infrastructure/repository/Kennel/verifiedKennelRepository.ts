@@ -3,7 +3,8 @@ import VerifiedKennelOwnerModel from "../../database/VerifiedKennelownerModel";
 import verifiedKennelOwnerRepo from "../../../useCase/interface/Kennel/VerifiedKennelRepo";
 import cages from "../../../domain/cages";
 import Cage from "../../database/cagesModel";
-
+import booking from "../../../domain/Booking";
+import Booking from "../../database/bookingModel";
 
 
 class VerifiedkennelRepository implements verifiedKennelOwnerRepo{
@@ -23,8 +24,6 @@ async getProfile(id: string): Promise<VerifiedKennelOwner | null> {
        return verifiedkennelowner
    }
  async savecage(data: cages): Promise<cages | null> {
-    console.log('data',data);
-    
      const newcage = new Cage(data) 
      const savedKennel = await newcage.save()
      return savedKennel
@@ -33,6 +32,34 @@ async getProfile(id: string): Promise<VerifiedKennelOwner | null> {
     const cageList = await Cage.find();
     return cageList;
  }
+
+async getSingleCage(id: string): Promise<cages | null> {
+    const cage = await Cage.findById({_id:id})
+    return cage
 }
+
+async savebooking(details: cages,userid:string, fromdate: string, todate: string, totalAmount: Number, totaldays: Number): Promise<booking | null> {
+
+    
+     const newbooking = new Booking({
+        kennelname:details.kennelname,
+        cageid:details._id,
+        userid,
+        fromdate,
+        todate,
+        totalamount:totalAmount,
+        totaldays,
+        ownerid:details.ownerId,
+        transactionId:'1234'
+     })
+     const booking = await newbooking.save()
+     const cagetemp = await Cage.findOne({_id:details._id})
+     console.log('cagetempl',cagetemp);
+     
+     cagetemp?.currentBookings.push({bookingid:booking._id as string,fromdate:fromdate,todate:todate,userid:userid,status:booking.status})
+     await cagetemp?.save();
+     return booking
+}
+}   
 
 export default VerifiedkennelRepository

@@ -107,10 +107,28 @@ async addKennel(req:Request,res:Response,next:NextFunction){
 
 async getCages(req:Request,res:Response,next:NextFunction){
     try {
-        const data = await this.kennelusecase.getCages()  
-        console.log(data.data);
-              
+        const data = await this.kennelusecase.getCages()                
        return  res.status(data.status).send(data.data)
+    } catch (error) {
+        next(error)
+    }
+}
+
+async viewDetails(req:Request,res:Response,next:NextFunction){
+    try {
+        const {Id} = req.body
+        const response = await this.kennelusecase.getSingleCage(Id) 
+        return res.status(response.status).json(response.data)
+    } catch (error) {
+        next(error)
+    }
+}
+
+async booking(req:Request,res:Response,next:NextFunction){
+    try {          
+       const{details,userid,fromdate,todate,totalAmount,totalDays} = req.body
+        const response = await this.kennelusecase.booking(details,userid,fromdate,todate,totalAmount,totalDays)
+        return res.status(response.status).json(response.message)
     } catch (error) {
         next(error)
     }
