@@ -7,6 +7,7 @@ import JWTTOKEN from "../../infrastructure/services/generateToken"
 import VerifiedkennelRepository from "../../infrastructure/repository/Kennel/verifiedKennelRepository"
 import Cloudinary from "../../infrastructure/services/cloudinary"
 
+
 class KennelUseCase{
     private KennelRepository
     private GenerateOtp
@@ -16,6 +17,7 @@ class KennelUseCase{
     private JwtToken
     private verifiedkennelRepository
     private Cloudinary
+
     constructor(
         KennalRepository:KennelRepository,
         GenerateOtp:GenerateOtp,
@@ -24,7 +26,7 @@ class KennelUseCase{
         generateEmail:EmailService,
         JwtToken:JWTTOKEN,
         verfiedKennelRepository:VerifiedkennelRepository,
-        cloudinary:Cloudinary
+        cloudinary:Cloudinary,
     ){
      this.KennelRepository = KennalRepository
      this.GenerateOtp = GenerateOtp
@@ -34,9 +36,13 @@ class KennelUseCase{
      this.JwtToken = JwtToken
      this.verifiedkennelRepository =  verfiedKennelRepository
      this.Cloudinary = cloudinary
+ 
     }
+  
+
 
     async checkExists(email:string){
+     
         const kennelOwnerExists = await this.KennelRepository.findByEmail(email)
         if(kennelOwnerExists){
             return{
@@ -265,12 +271,35 @@ async addCage(data:any,filepath:string[]){
     }
  }
 
- async booking(details:any,userid:string,fromdate:string,todate:string,totalAmount:Number,totalDays:Number){
+ async booking(details:any,userid:string,fromdate:string,todate:string,totalAmount:Number,totalDays:Number,token:any){
+
+
+
     const bookinginfo = await this.verifiedkennelRepository.savebooking(details,userid,fromdate,todate,totalAmount,totalDays)
+    
     return {
         status:200,
         message:'cage booked successfully'
     }
+ }
+
+ async getOwnersCage(Id:string){
+    const cages = await this.verifiedkennelRepository.getownerscages(Id)
+    if(cages){
+        return {
+            status:200,
+            data:{
+                status:true,
+                 data:cages
+            }
+        }
+    }else{
+        return{
+            status:400,
+            message:'failed to fetch data'
+        }
+    }
+    
  }
 
 }

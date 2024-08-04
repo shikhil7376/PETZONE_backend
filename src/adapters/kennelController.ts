@@ -126,9 +126,21 @@ async viewDetails(req:Request,res:Response,next:NextFunction){
 
 async booking(req:Request,res:Response,next:NextFunction){
     try {          
-       const{details,userid,fromdate,todate,totalAmount,totalDays} = req.body
-        const response = await this.kennelusecase.booking(details,userid,fromdate,todate,totalAmount,totalDays)
+        
+       const{details,userid,fromdate,todate,totalAmount,totalDays,token} = req.body
+       
+        const response = await this.kennelusecase.booking(details,userid,fromdate,todate,totalAmount,totalDays,token)
         return res.status(response.status).json(response.message)
+    } catch (error) {
+        next(error)
+    }
+}
+
+async getOwnersCage(req:Request,res:Response,next:NextFunction){
+    try {
+       const {Id} = req.body
+        const response = await this.kennelusecase.getOwnersCage(Id)
+        return res.status(response.status).json(response.data)
     } catch (error) {
         next(error)
     }

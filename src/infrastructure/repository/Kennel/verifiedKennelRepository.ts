@@ -60,6 +60,11 @@ async savebooking(details: cages,userid:string, fromdate: string, todate: string
      await cagetemp?.save();
      return booking
 }
+
+async getownerscages(id: string): Promise<cages[] | null> {
+    const cagelists = await Cage.find({ownerId:id})
+    return cagelists   
+}
 }   
 
 export default VerifiedkennelRepository

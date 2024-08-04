@@ -12,13 +12,13 @@ import { kennelAuth } from '../middleware/kennelAuth'
 import Cloudinary from '../services/cloudinary'
 import upload from '../services/multer'
 
-
 // services
 const generateOtp = new GenerateOtp()
 const encryptPassword = new EncryptPassword()
 const generateEmail = new EmailService()
 const jwtToken = new JWTTOKEN()
 const cloudinary = new Cloudinary()
+
 
 // repositories
 const kennelRepository = new KennelRepository()
@@ -42,5 +42,6 @@ route.post('/add-cages',upload.array('cageimages',3), (req, res, next) => kennel
 route.get('/get-cages',(req,res,next)=>kennelcontroller.getCages(req,res,next))
 route.post('/view-details',(req,res,next)=>kennelcontroller.viewDetails(req,res,next))
 route.post('/booking',(req,res,next)=>kennelcontroller.booking(req,res,next))
+route.post('/owners-cage',(req,res,next)=>kennelcontroller.getOwnersCage(req,res,next))
 
 export default route 
