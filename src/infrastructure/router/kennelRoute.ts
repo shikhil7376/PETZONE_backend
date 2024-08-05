@@ -43,5 +43,12 @@ route.get('/get-cages',(req,res,next)=>kennelcontroller.getCages(req,res,next))
 route.post('/view-details',(req,res,next)=>kennelcontroller.viewDetails(req,res,next))
 route.post('/booking',(req,res,next)=>kennelcontroller.booking(req,res,next))
 route.post('/owners-cage',(req,res,next)=>kennelcontroller.getOwnersCage(req,res,next))
-
+route.post('/edit-cage',upload.array('editimages',3),(req,res,next)=>{
+    if (req.files) {
+        console.log('Files uploaded:', req.files);
+        res.status(200).json({ message: 'Files uploaded successfully', files: req.files });
+      } else {
+        res.status(400).json({ message: 'No files uploaded' });
+      }
+    kennelcontroller.editCage(req,res,next)})
 export default route 

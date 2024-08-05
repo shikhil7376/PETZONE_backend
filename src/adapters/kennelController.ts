@@ -146,7 +146,22 @@ async getOwnersCage(req:Request,res:Response,next:NextFunction){
     }
 }
 
+async editCage(req:Request,res:Response,next:NextFunction){
+     try {
+        
+        const images =  req.files as Express.Multer.File[];
+        console.log(images);
+        
+        
+        
+     } catch (error) {
+        
+     }
 }
+
+}
+
+
 
 
 export default kennelController

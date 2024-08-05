@@ -9,7 +9,7 @@ class adminUseCase{
       this.AdminRepo = AdminRepo
       this.VerifiedKennlRepo = KennelRepo
     }
-    async getUsers(page:number,limit:number,searchTerm:string){
+    async  getUsers(page:number,limit:number,searchTerm:string){
         const data = await this.AdminRepo.getUsers(page,limit,searchTerm)        
         if(data){
             return{
