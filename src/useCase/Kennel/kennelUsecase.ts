@@ -199,7 +199,8 @@ async getProfile(id:string){
     name:profileData?.name,
     email:profileData?.email,
     phone:profileData?.phone,
-    isBlocked:profileData?.isBlocked
+    isBlocked:profileData?.isBlocked,
+    image:profileData?.image
 }
 if(profileData){
     return {
@@ -300,6 +301,45 @@ async addCage(data:any,filepath:string[]){
         }
     }
     
+ }
+
+ async getCageById(Id:string){
+    const cage = await this.verifiedkennelRepository.getCageById(Id)
+    if(cage){
+        return{
+            status:200,
+            data:{
+                status:true,
+                data:cage
+            }
+        }
+    }else{
+        return{
+            status:400,
+            message:'cage not found'
+        }
+    }
+ }
+ 
+ async editCage(id:string,data:any,filepath:string[],existingImages:string[]){
+       let finalImages = existingImages
+         if(filepath.length>0){
+            const newImagePaths = await this.Cloudinary.uploadMultipleimages(filepath, 'cages');
+            finalImages = newImagePaths;
+         }
+         data.image = finalImages;
+      const updatedCage = await this.verifiedkennelRepository.updatecage(id,data)
+      if(updatedCage){
+        return{
+            status:200,
+            message:'cage updated successfully'
+        }
+      }else{
+        return{
+            status:400,
+            message:'failed to update cage'
+        }
+      }
  }
 
 }

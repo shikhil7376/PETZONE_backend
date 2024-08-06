@@ -148,15 +148,47 @@ async getOwnersCage(req:Request,res:Response,next:NextFunction){
 
 async editCage(req:Request,res:Response,next:NextFunction){
      try {
-        
+        const { id, kennelname, location, description, phone, type, maxCount, PricePerNight, ownerId } = req.body;
         const images =  req.files as Express.Multer.File[];
-        console.log(images);
+        const imagePaths = images.map((val) => val.path);
+        const existingCage = await this.kennelusecase.getCageById(id)
+        if(!existingCage.data?.data){
+            return res.status(404).json({message:'Cage not found'})
+        }
         
-        
-        
+        const updatedData = {
+            kennelname: kennelname || existingCage.data.data.kennelname,
+            location: location || existingCage.data.data.location,
+            description: description || existingCage.data.data.description,
+            phone: phone || existingCage.data.data.phone,
+            type: type || existingCage.data.data.type,
+            maxcount: Number(maxCount) || existingCage.data.data.maxcount,
+            pricepernight: Number(PricePerNight) || existingCage.data.data.pricepernight,
+            ownerId: ownerId || existingCage.data.data.ownerId,
+          };
+          const existingImages = existingCage.data.data.image || [];
+          let finalImages = existingImages;
+          const response = await this.kennelusecase.editCage(id,updatedData,imagePaths,finalImages)
+          console.log(response.message);
+          
+          return res.status(response.status).json(response.message)
      } catch (error) {
-        
+        next(error)
      }
+}
+
+async editProfile(req:Request,res:Response,next:NextFunction){
+   try {
+      const {id,name,email,phone} = req.body
+      
+      
+      const image =  req.files as Express.Multer.File[];
+      
+      
+   } catch (error) {
+    
+   }
+   
 }
 
 }

@@ -65,6 +65,17 @@ async getownerscages(id: string): Promise<cages[] | null> {
     const cagelists = await Cage.find({ownerId:id})
     return cagelists   
 }
+
+async getCageById(id: string): Promise<cages | null> {
+    const cage = await Cage.findById({_id:id})
+    return cage
+}
+ 
+ async updatecage(id: string, data: cages): Promise<cages | null> {
+    const updatedCage = await Cage.findByIdAndUpdate(id, data, { new: true });
+    return updatedCage;
+}
+
 }   
 
 export default VerifiedkennelRepository

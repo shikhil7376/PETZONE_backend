@@ -4,7 +4,8 @@ interface VerifiedKennelOwner{
      email:string,
      password:string,
      phone:string,
-     isBlocked:Boolean
+     isBlocked:Boolean,
+     image:string
 }
 
 export  default VerifiedKennelOwner

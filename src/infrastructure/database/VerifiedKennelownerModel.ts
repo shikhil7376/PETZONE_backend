@@ -21,6 +21,11 @@ const VerifiedkennelOwnerSchema:Schema<VerifiedKennelOwner&Document> = new Schem
     isBlocked:{
        type:Boolean,
        default:false
+    },
+    image:{
+      type:String,
+      required:true,
+      default: 'pics/logo.png'
     }
    
 })
