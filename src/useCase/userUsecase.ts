@@ -4,24 +4,32 @@ import EncryptPassword from "../infrastructure/services/bcryptPassword";
 import GenerateOtp from "../infrastructure/services/generateOtp";
 import EmailService from "../infrastructure/services/emailService";
 import JWTTOKEN from "../infrastructure/services/generateToken";
+import Cloudinary from "../infrastructure/services/cloudinary";
+
 class UserUseCase{
     private UserRepository
     private EncryptPassword
     private JwtToken
     private generateOtp
     private generateEmail
+    private Cloudinary
+
     constructor(
         UserRepository:UserRepository,
         encryptPassword:EncryptPassword,
         jwtToken:JWTTOKEN,
         genrateOtp:GenerateOtp,
-        generateEmail:EmailService
+        generateEmail:EmailService,
+        cloudinary:Cloudinary,
+
     ){
          this.UserRepository = UserRepository
          this.EncryptPassword = encryptPassword
          this.JwtToken = jwtToken
          this.generateOtp = genrateOtp
          this.generateEmail = generateEmail
+         this.Cloudinary = cloudinary
+
     }
 
     async  checkExist(email:string){
@@ -318,12 +326,15 @@ async resendOtp (name:string,email:string,password:string,phone:string){
 
     async getProfile(id:string){
     const profileData = await this.UserRepository.getProfile(id)
+    console.log(profileData);
+    
     let data = {
         _id:profileData?._id,
         name:profileData?.name,
         email:profileData?.email,
         phone:profileData?.phone,
-        isBlocked:profileData?.isBlocked
+        isBlocked:profileData?.isBlocked,
+        image:profileData?.image
     }
     if(profileData){
         return {
@@ -340,6 +351,41 @@ async resendOtp (name:string,email:string,password:string,phone:string){
         }
     }
     }
+
+    async findById(Id:string){
+        const owner = await this.UserRepository.findById(Id)
+        if(owner){
+            return {
+                data:owner
+            }
+        }else{
+            return{
+                status:400,
+                message:'owner not found'
+            }
+        }
+     }
+
+    async editProfile(id:string,data:any,filePath:string){
+        let finalImage
+      if(filePath){
+          const newImagePath = await this.Cloudinary.uploadImage(filePath,'user')
+         finalImage = newImagePath
+      }
+      data.image = finalImage
+      const updateOwner = await this.UserRepository.updateProfile(id,data)
+      if(updateOwner){
+          return{
+              status:200,
+              message:'profile updated succesfully'
+          }
+      }else{
+          return{
+              status:400,
+              message:'failed to update profile'
+          }
+      }
+   }
     }
 
 export default UserUseCase;

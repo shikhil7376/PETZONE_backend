@@ -99,7 +99,7 @@ async addKennel(req:Request,res:Response,next:NextFunction){
         const images =  req.files as Express.Multer.File[];
      const imagepath = images.map((val)=>val.path)  
      const response = await this.kennelusecase.addCage(data,imagepath)
-     
+      return res.status(response.status).json(response.message)
     } catch (error) {
         next(error)
     }
@@ -139,8 +139,15 @@ async booking(req:Request,res:Response,next:NextFunction){
 async getOwnersCage(req:Request,res:Response,next:NextFunction){
     try {
        const {Id} = req.body
-        const response = await this.kennelusecase.getOwnersCage(Id)
-        return res.status(response.status).json(response.data)
+            const page = parseInt(req.query.page as string)|| 1
+             const limit = parseInt(req.query.limit as string) || 10
+             const searchTerm = req.query.search as string || '' 
+        const response = await this.kennelusecase.getOwnersCage(Id,page,limit,searchTerm)
+        if(response.status==200){
+            return res.status(response.status).json(response)
+        }else{
+            return res.status(response.status).json(response.message)
+        }
     } catch (error) {
         next(error)
     }
@@ -180,13 +187,22 @@ async editCage(req:Request,res:Response,next:NextFunction){
 async editProfile(req:Request,res:Response,next:NextFunction){
    try {
       const {id,name,email,phone} = req.body
-      
-      
-      const image =  req.files as Express.Multer.File[];
-      
+      const image =  req.file?.path
+      const ownerdata = await this.kennelusecase.findById(id)
+      if(!ownerdata.data){
+        res.status(404).json({message:'owner not found'})
+      }
+
+      const updatedData = {
+        email:email || ownerdata.data?.email,
+        name:name || ownerdata.data?.name,
+        phone:phone || ownerdata.data?.phone
+      }
+      const response = await this.kennelusecase.editProfile(id,updatedData,image||'')
+      return res.status(response.status).json(response.message)
       
    } catch (error) {
-    
+      next(error)
    }
    
 }

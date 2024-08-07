@@ -12,6 +12,9 @@ interface UserRepo{
     save(user:User):Promise<User>
     changePassword(email:string,password:string):Promise<boolean>
     getProfile(id:string):Promise<User|null>
+    findById(id:string):Promise<User|null>
+    updateProfile(id:string,data:User):Promise<User|null>
+
 }
 
 

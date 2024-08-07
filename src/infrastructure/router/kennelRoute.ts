@@ -44,5 +44,8 @@ route.post('/view-details',(req,res,next)=>kennelcontroller.viewDetails(req,res,
 route.post('/booking',(req,res,next)=>kennelcontroller.booking(req,res,next))
 route.post('/owners-cage',(req,res,next)=>kennelcontroller.getOwnersCage(req,res,next))
 route.post('/edit-cage',upload.array('editimages',3),(req,res,next)=>{kennelcontroller.editCage(req,res,next)})
-route.post('/edit-profile',upload.single('ownerimage'),(req,res,next)=>kennelcontroller.editProfile(req,res,next))
+route.post('/edit-profile',upload.single('ownerimage'),(req,res,next)=>{
+   console.log(req.file);
+   
+  kennelcontroller.editProfile(req,res,next)})
 export default route 

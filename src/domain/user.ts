@@ -6,7 +6,8 @@ interface User{
     password:string,
     isBlocked:boolean,
     isAdmin:boolean,
-    isGoogle:boolean
+    isGoogle:boolean,
+    image:string
 }
 
 export default User 

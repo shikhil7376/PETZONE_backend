@@ -147,6 +147,31 @@ async getProfile(req:Request,res:Response,next:NextFunction){
     }
 }
 
+async editProfile(req:Request,res:Response,next:NextFunction){
+    try {
+       const {id,name,email,phone} = req.body
+       const image =  req.file?.path
+       const ownerdata = await this.userUseCase.findById(id)
+       if(!ownerdata.data){
+         res.status(404).json({message:'owner not found'})
+       }
+ 
+       const updatedData = {
+         email:email || ownerdata.data?.email,
+         name:name || ownerdata.data?.name,
+         phone:phone || ownerdata.data?.phone
+       }
+       const response = await this.userUseCase.editProfile(id,updatedData,image||'')
+       console.log('respu',response);
+       
+       return res.status(response.status).json(response.message)
+       
+    } catch (error) {
+       next(error)
+    }
+    
+ }
+
 }
 
 

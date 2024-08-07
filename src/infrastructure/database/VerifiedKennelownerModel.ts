@@ -24,8 +24,6 @@ const VerifiedkennelOwnerSchema:Schema<VerifiedKennelOwner&Document> = new Schem
     },
     image:{
       type:String,
-      required:true,
-      default: 'pics/logo.png'
     }
    
 })

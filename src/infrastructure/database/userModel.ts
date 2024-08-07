@@ -30,7 +30,11 @@ const useSchema:Schema = new Schema<User|Document>(
         isGoogle:{
             type:Boolean,
             default:false
+        },
+        image:{
+            type:String
         }
+       
     }
 )
 

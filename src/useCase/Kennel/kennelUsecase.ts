@@ -222,6 +222,17 @@ async addCage(data:any,filepath:string[]){
     const imageUrls = await this.Cloudinary.uploadMultipleimages(filepath,'cages')
      data.image = imageUrls
      const savedKennel = await this.verifiedkennelRepository.savecage(data)
+     if(savedKennel){
+        return {
+            status:200,
+            message:'cage added successfully'
+        }
+     }else{
+        return{
+            status:400,
+            message:'failed to add cage'
+        }
+     }
 }
 
  async getCages(){
@@ -284,15 +295,15 @@ async addCage(data:any,filepath:string[]){
     }
  }
 
- async getOwnersCage(Id:string){
-    const cages = await this.verifiedkennelRepository.getownerscages(Id)
-    if(cages){
+ async getOwnersCage(Id:string,page:number,limit:number,searchTerm:string){
+    const data = await this.verifiedkennelRepository.getownerscages(Id,page,limit,searchTerm)
+    if(data){
         return {
             status:200,
-            data:{
-                status:true,
-                 data:cages
-            }
+             data:data.cage,
+             total:data.total,
+             page,
+             limit
         }
     }else{
         return{
@@ -340,6 +351,41 @@ async addCage(data:any,filepath:string[]){
             message:'failed to update cage'
         }
       }
+ }
+
+ async findById(Id:string){
+    const owner = await this.verifiedkennelRepository.findById(Id)
+    if(owner){
+        return {
+            data:owner
+        }
+    }else{
+        return{
+            status:400,
+            message:'owner not found'
+        }
+    }
+ }
+
+ async editProfile(id:string,data:any,filePath:string){
+      let finalImage
+    if(filePath){
+        const newImagePath = await this.Cloudinary.uploadImage(filePath,'kennelowner')
+       finalImage = newImagePath
+    }
+    data.image = finalImage
+    const updateOwner = await this.verifiedkennelRepository.updateProfile(id,data)
+    if(updateOwner){
+        return{
+            status:200,
+            message:'profile updated succesfully'
+        }
+    }else{
+        return{
+            status:400,
+            message:'failed to update profile'
+        }
+    }
  }
 
 }

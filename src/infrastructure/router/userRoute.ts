@@ -7,6 +7,9 @@ import GenerateOtp from '../services/generateOtp'
 import EmailService from '../services/emailService'
 import JWTTOKEN from '../services/generateToken'
 import { userAuth } from '../middleware/userAuth'
+import Cloudinary from '../services/cloudinary'
+import upload from '../services/multer'
+
 
 
 //services
@@ -14,11 +17,13 @@ import { userAuth } from '../middleware/userAuth'
  const encryptPassword = new EncryptPassword()
  const generateEmail = new EmailService()
  const jwtToken = new JWTTOKEN()
+ const cloudinary = new Cloudinary()
+
 // repositories
 const userRepository = new UserRepository()
 
 // useCases
-const userCase  = new UserUseCase(userRepository,encryptPassword,jwtToken,generateOtp,generateEmail)
+const userCase  = new UserUseCase(userRepository,encryptPassword,jwtToken,generateOtp,generateEmail, cloudinary )
 
 // controllers
 const userController = new UserController(userCase)
@@ -36,4 +41,5 @@ route.post('/verify-fotp',(req,res,next)=>userController.verifyfotp(req,res,next
 route.post('/verify-fresendotp',(req,res,next)=>userController.verifyforgotResendotp(req,res,next))
 route.post('/resetpassword',(req,res,next)=>userController.resetPassword(req,res,next))
 route.post('/getprofile',userAuth,(req,res,next)=>userController.getProfile(req,res,next))
+route.post('/edit-profile',upload.single('userimage'),(req,res,next)=>userController.editProfile(req,res,next))
 export default route

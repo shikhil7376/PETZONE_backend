@@ -61,9 +61,22 @@ async savebooking(details: cages,userid:string, fromdate: string, todate: string
      return booking
 }
 
-async getownerscages(id: string): Promise<cages[] | null> {
-    const cagelists = await Cage.find({ownerId:id})
-    return cagelists   
+async getownerscages(id: string, page: number, limit: number, searchTerm: string): Promise<{ cage: {}[]; total: number; }> {
+    const skip = (page - 1) * limit;
+    const query = searchTerm ? 
+    {
+        ownerId: id,
+        $or: [
+            { kennelname: { $regex: searchTerm, $options: 'i' } },
+            { location: { $regex: searchTerm, $options: 'i' } }
+        ]
+    } : 
+    { ownerId: id };
+
+    const cages = await Cage.find(query).skip(skip).limit(limit).lean();
+    const total = await Cage.countDocuments(query);
+
+    return { cage: cages, total };
 }
 
 async getCageById(id: string): Promise<cages | null> {
@@ -74,6 +87,16 @@ async getCageById(id: string): Promise<cages | null> {
  async updatecage(id: string, data: cages): Promise<cages | null> {
     const updatedCage = await Cage.findByIdAndUpdate(id, data, { new: true });
     return updatedCage;
+}
+
+async findById(id: string): Promise<VerifiedKennelOwner | null> {
+    const owner = await VerifiedKennelOwnerModel.findById({_id:id})
+    return owner
+}
+
+async updateProfile(id: string, data: VerifiedKennelOwner): Promise<VerifiedKennelOwner | null> {
+    const updatedProfile = await VerifiedKennelOwnerModel.findByIdAndUpdate(id,data,{new:true})
+    return updatedProfile
 }
 
 }   
